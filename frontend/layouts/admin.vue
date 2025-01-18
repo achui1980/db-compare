@@ -19,6 +19,14 @@
           <UploadOutlined />
           <span>文件上传</span>
         </a-menu-item>
+        <a-menu-item key="/compare" @click="router.push('/compare')">
+          <SyncOutlined />
+          <span>数据比对</span>
+        </a-menu-item>
+        <a-menu-item key="/settings" @click="router.push('/settings')">
+          <SettingOutlined />
+          <span>系统设置</span>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
@@ -50,7 +58,7 @@
 
 <script setup lang="ts">
 import { ref,watch } from 'vue'
-import { UserOutlined, DashboardOutlined, UploadOutlined } from '@ant-design/icons-vue'
+import { UserOutlined, DashboardOutlined, UploadOutlined, SyncOutlined,SettingOutlined} from '@ant-design/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
