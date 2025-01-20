@@ -170,3 +170,13 @@ The email templates are in `./backend/app/email-templates/`. Here, there are two
 Before continuing, ensure you have the [MJML extension](https://marketplace.visualstudio.com/items?itemName=attilabuti.vscode-mjml) installed in your VS Code.
 
 Once you have the MJML extension installed, you can create a new email template in the `src` directory. After creating the new email template and with the `.mjml` file open in your editor, open the command palette with `Ctrl+Shift+P` and search for `MJML: Export to HTML`. This will convert the `.mjml` file to a `.html` file and now you can save it in the build directory.
+
+## 代码解读
+1. routes目录主要放API的定义，有点想Java的controller
+2. core/config.py 主要放配置文件，比如数据库的连接信息，redis的连接信息等，还有其他一些配置信息，信息会从.env文件中读取
+3. api/deps.py 主要放依赖注入，比如数据库的连接,获取到数据库连接时候，就可以操作数据库 （依赖注入是fastapi的特性）
+4. 工程采用ORM技术，用的是SQLAlchemy框架
+5. 工程启动用命令：uvicorn app.main:app  --port 8000 --reloa
+
+
+

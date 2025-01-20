@@ -1,7 +1,9 @@
 import uuid
 
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel, Field
 from sqlmodel import Field, Relationship, SQLModel
+from typing import Optional
+from datetime import datetime
 
 
 # Shared properties
@@ -112,3 +114,29 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
+
+
+class DatabaseConfigBase(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    type: str = Field(..., min_length=1, max_length=50)
+    host: str
+    port: int = Field(default=3306, ge=1, le=65535)
+    database: str
+    username: str
+    password: str
+    charset: str = Field(default="utf8mb4")
+    is_active: bool = True
+
+class DatabaseConfigCreate(DatabaseConfigBase):
+    pass
+
+class DatabaseConfigUpdate(DatabaseConfigBase):
+    pass
+
+class DatabaseConfig(DatabaseConfigBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
