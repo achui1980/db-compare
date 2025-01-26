@@ -9,13 +9,14 @@ from app.models import (
     DatabaseConfigUpdate,
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/db_configs", tags=["db_configs"])
 
 @router.post("/", response_model=DatabaseConfig)
 def create_database_config(
     config: DatabaseConfigCreate,
     db: Session = Depends(get_db)
 ):
+    config = DatabaseConfigCreate(**config.dict())
     return database_config.create_db_config(db=db, config=config)
 
 @router.get("/", response_model=List[DatabaseConfig])

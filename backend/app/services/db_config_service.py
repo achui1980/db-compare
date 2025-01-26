@@ -1,10 +1,16 @@
-from sqlalchemy.orm import Session
+from datetime import datetime
 from typing import List, Optional
-from app.models import DatabaseConfig
-from app.models import DatabaseConfigCreate, DatabaseConfigUpdate
+from uuid import UUID
+from sqlalchemy.orm import Session
+from app.models import DatabaseConfig, DatabaseConfigUpdate
+from app.models import DatabaseConfigCreate
 
 def create_db_config(db: Session, config: DatabaseConfigCreate) -> DatabaseConfig:
-    db_config = DatabaseConfig(**config.dict())
+    db_config = DatabaseConfig(
+        **config.dict(),
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
     db.add(db_config)
     db.commit()
     db.refresh(db_config)

@@ -1,4 +1,5 @@
 import secrets
+from urllib.parse import urlencode
 import warnings
 from typing import Annotated, Any, Literal
 
@@ -67,14 +68,15 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> MySQLDsn:
+        query_string = urlencode({"charset": self.MYSQL_CHARSET})
         return MultiHostUrl.build(
             scheme="mysql+pymysql",
-            username=self.MYSQL_HOST,
+            username=self.MYSQL_USER,
             password=self.MYSQL_PASSWORD,
             host=self.MYSQL_HOST,
             port=self.MYSQL_PORT,
             path=self.MYSQL_DATABASE,
-            query={"charset": self.MYSQL_CHARSET},
+            query=query_string,
         )
 
     SMTP_TLS: bool = True

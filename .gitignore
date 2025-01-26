@@ -4,3 +4,6 @@ node_modules
 .nuxt
 dist
 .env
+__pycache__
+*/**/*.pyc
+backend/poetry.lock

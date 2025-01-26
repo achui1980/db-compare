@@ -133,8 +133,9 @@ class DatabaseConfigCreate(DatabaseConfigBase):
 class DatabaseConfigUpdate(DatabaseConfigBase):
     pass
 
-class DatabaseConfig(DatabaseConfigBase):
-    id: int
+class DatabaseConfig(DatabaseConfigBase, table=True):
+    __tablename__ = "database_configs"
+    id: int = Field(default=None, primary_key=True, index=True)
     created_at: datetime
     updated_at: datetime
 
