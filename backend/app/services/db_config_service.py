@@ -1,10 +1,13 @@
 from datetime import datetime
+import logging
 from typing import List, Optional
 from uuid import UUID
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from app.models import DatabaseConfig, DatabaseConfigUpdate
-from app.models import DatabaseConfigCreate
+from app.domain.db_config import DatabaseConfig, DatabaseConfigUpdate, DatabaseConfigCreate
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 def create_db_config(db: Session, config: DatabaseConfigCreate) -> DatabaseConfig:
     db_config = DatabaseConfig(
         **config.dict(),
@@ -40,3 +43,13 @@ def delete_db_config(db: Session, config_id: int) -> bool:
         db.commit()
         return True
     return False
+
+def test_db_connection(config: DatabaseConfig) -> bool:
+    try:
+        engine = create_engine(config.connection_string)
+        connection = engine.connect()
+        connection.close()
+        return True
+    except Exception as e:
+        logger.error(f"Connection failed: {e}")
+        return False

@@ -3,11 +3,13 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.api.deps import get_db
 from app.services import db_config_service as database_config
-from app.models import (
+from app.domain.db_config import (
     DatabaseConfig,
     DatabaseConfigCreate,
     DatabaseConfigUpdate,
 )
+
+from app.services.db_config_service import test_db_connection
 
 router = APIRouter(prefix="/db_configs", tags=["db_configs"])
 
@@ -57,3 +59,16 @@ def delete_database_config(
     if not success:
         raise HTTPException(status_code=404, detail="数据库配置不存在")
     return {"detail": "删除成功"}
+
+@router.post("/test-connection", response_model=bool)
+def test_database_connection_route(
+    config: DatabaseConfigCreate
+):
+    """
+    测试数据库连接是否成功
+    """
+    try:
+        success = test_db_connection(config)
+        return success
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

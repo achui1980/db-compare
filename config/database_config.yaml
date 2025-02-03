@@ -1,0 +1,32 @@
+# 数据库配置
+databases:
+  - name: database1
+    type: MySQL
+    host: localhost
+    port: 3306
+    database: mydatabase1
+    username: user1
+    password: password1
+  - name: database2
+    type: PostgreSQL
+    host: localhost
+    port: 5432
+    database: mydatabase2
+    username: user2
+    password: password2
+
+# 对比配置
+comparison:
+  - db1: database1
+    db2: database2
+    tables:
+      - table_name: table1
+        database_name: database1
+        columns:
+          - column1
+          - column2
+      - table_name: table2
+        database_name: database2
+        columns:
+          - columnA
+          - columnB

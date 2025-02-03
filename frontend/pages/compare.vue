@@ -2,8 +2,22 @@
   <NuxtLayout name="admin">
     <a-card title="数据库表结构比对">
       <a-row :gutter="[16, 16]">
-        <!-- 源表结构 -->
+        <!-- 源数据库和表选择 -->
         <a-col :span="12">
+          <div style="margin-bottom: 16px;">
+            <a-form-item label="源数据库">
+            </a-form-item>
+            <a-select v-model:value="selectedSourceDatabase" placeholder="选择源数据库" style="width: 100%;">
+              <a-select-option v-for="db in databases" :key="db" :value="db">{{ db }}</a-select-option>
+            </a-select>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <a-form-item label="源表">
+            </a-form-item>
+            <a-select v-model:value="selectedSourceTable" placeholder="选择源表" style="width: 100%;">
+              <a-select-option v-for="table in sourceTables" :key="table" :value="table">{{ table }}</a-select-option>
+            </a-select>
+          </div>
           <SchemaSelector
             v-model:selectedColumns="selectedSourceColumns"
             :schema="sourceSchema"
@@ -12,8 +26,22 @@
           />
         </a-col>
         
-        <!-- 目标表结构 -->
+        <!-- 目标数据库和表选择 -->
         <a-col :span="12">
+          <div style="margin-bottom: 16px;">
+            <a-form-item label="目标数据库">
+            </a-form-item>
+            <a-select v-model:value="selectedTargetDatabase" placeholder="选择目标数据库" style="width: 100%;">
+              <a-select-option v-for="db in databases" :key="db" :value="db">{{ db }}</a-select-option>
+            </a-select>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <a-form-item label="目标表">
+            </a-form-item>
+            <a-select v-model:value="selectedTargetTable" placeholder="选择目标表" style="width: 100%;">
+              <a-select-option v-for="table in targetTables" :key="table" :value="table">{{ table }}</a-select-option>
+            </a-select>
+          </div>
           <SchemaSelector
             v-model:selectedColumns="selectedTargetColumns"
             :schema="targetSchema"
@@ -39,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import SchemaSelector from '~/components/SchemaSelector.vue'
 
 // 示例数据
@@ -77,9 +105,18 @@ const loading = ref(false)
 const selectedSourceColumns = ref([])
 const selectedTargetColumns = ref([])
 
+const databases = ref(['database1', 'database2']) // 示例数据库列表
+const sourceTables = ref(['table1', 'table2']) // 示例源表列表
+const targetTables = ref(['table1', 'table2']) // 示例目标表列表
+
+const selectedSourceDatabase = ref('')
+const selectedSourceTable = ref('')
+const selectedTargetDatabase = ref('')
+const selectedTargetTable = ref('')
+
 // 是否可以进行比对
 const canCompare = computed(() => {
-  return selectedSourceColumns.value.length > 0 && selectedTargetColumns.value.length > 0
+  return selectedSourceDatabase.value && selectedSourceTable.value && selectedTargetDatabase.value && selectedTargetTable.value && selectedSourceColumns.value.length > 0 && selectedTargetColumns.value.length > 0
 })
 
 // 处理源表列选择变化
@@ -102,4 +139,16 @@ const handleCompare = async () => {
     loading.value = false
   }
 }
+
+// 监听数据库选择变化以更新表列表
+watch(selectedSourceDatabase, async (newDb) => {
+  // TODO: 根据选择的数据库获取表列表
+  sourceTables.value = ['table1', 'table2'] // 示例表列表
+})
+
+watch(selectedTargetDatabase, async (newDb) => {
+  // TODO: 根据选择的数据库获取表列表
+  targetTables.value = ['table1', 'table2'] // 示例表列表
+})
+
 </script>

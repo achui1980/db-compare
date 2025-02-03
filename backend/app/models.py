@@ -115,29 +115,3 @@ class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
 
-
-class DatabaseConfigBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100)
-    type: str = Field(..., min_length=1, max_length=50)
-    host: str
-    port: int = Field(default=3306, ge=1, le=65535)
-    database: str
-    username: str
-    password: str
-    charset: str = Field(default="utf8mb4")
-    is_active: bool = True
-
-class DatabaseConfigCreate(DatabaseConfigBase):
-    pass
-
-class DatabaseConfigUpdate(DatabaseConfigBase):
-    pass
-
-class DatabaseConfig(DatabaseConfigBase, table=True):
-    __tablename__ = "database_configs"
-    id: int = Field(default=None, primary_key=True, index=True)
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        orm_mode = True
