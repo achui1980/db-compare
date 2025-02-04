@@ -7,3 +7,4 @@ __pycache__
 **/*.pyc
 backend/poetry.lock
 .vscode
+backend/app/__pycache__/*.pyc

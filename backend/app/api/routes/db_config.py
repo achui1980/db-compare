@@ -79,4 +79,7 @@ def test_database_connection_route(
             response.success_response()
         return response.model_dump()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        if isinstance(e, ValueError):
+            raise HTTPException(status_code=500, detail=str(e))
+        else:
+            raise HTTPException(status_code=500, detail="数据库连接失败,请检查配置")

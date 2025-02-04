@@ -6,3 +6,4 @@ dist
 __pycache__
 **/*.pyc
 poetry.lock
+backend/app/__pycache__/*.pyc

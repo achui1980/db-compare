@@ -45,11 +45,7 @@ def delete_db_config(db: Session, config_id: int) -> bool:
     return False
 
 def test_db_connection(config: DatabaseConfig) -> bool:
-    try:
-        engine = create_engine(config.connection_string)
-        connection = engine.connect()
-        connection.close()
-        return True
-    except Exception as e:
-        logger.error(f"Connection failed: {e}")
-        return False
+    engine = create_engine(config.connection_string)
+    connection = engine.connect()
+    connection.close()
+    return True

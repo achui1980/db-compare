@@ -100,6 +100,7 @@ import { ref, reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import type { FormInstance } from 'ant-design-vue'
+import {ApiError, apiService, OpenAPI} from '@/client' // 引入request方法和OpenAPIConfig
 
 interface DbConnection {
   id: string
@@ -128,13 +129,13 @@ const formRef = ref<FormInstance>()
 
 const formState = reactive({
   id: '',
-  name: '',
+  name: '222',
   type: 'MySQL',
-  host: '',
-  port: 3306,
-  database: '',
-  username: '',
-  password: ''
+  host: 'www.zhangyulu.cn',
+  port: 33306,
+  database: 'db-compare',
+  username: 'root',
+  password: 'admin'
 })
 
 const rules = {
@@ -173,7 +174,10 @@ const handleTestConnection = async (record: DbConnection) => {
   testLoading.value[record.id] = true
   try {
     // TODO: 实现测试连接逻辑
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await apiService(OpenAPI,{
+      method:'POST',
+      url:'/api/v1/db_configs/test-connection',
+      body:formState})
     message.success('连接成功')
   } catch (error) {
     message.error('连接失败')
@@ -223,15 +227,21 @@ const modalTestLoading = ref(false)
 
 // 添加弹窗中的测试连接方法
 const handleTestConnectionInModal = async () => {
+  let response
   try {
     await formRef.value?.validate()
     modalTestLoading.value = true
     // TODO: 实现实际的测试连接逻辑
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    response = await apiService(OpenAPI,{
+      method:'POST',
+      url:'/api/v1/db_configs/test-connection',
+      body:formState
+    })
     message.success('连接测试成功')
   } catch (error) {
-    if (error instanceof Error) {
-      message.error(error.message || '连接测试失败')
+    console.log("error", response)
+    if (error instanceof ApiError) {
+      message.error(error.body.msg || '连接测试失败')
     } else {
       message.error('表单验证失败')
     }

@@ -15,11 +15,12 @@ class DatabaseConfigBase(SQLModel):
 
     @property
     def connection_string(self) -> str:
-        if self.type == "mysql":
+        db_type = self.type.lower()
+        if db_type == "mysql":
             return f"mysql+pymysql://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}?charset={self.charset}"
-        elif self.type == "postgresql":
+        elif db_type == "postgresql":
             return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
-        elif self.type == "sqlite":
+        elif db_type == "sqlite":
             return f"sqlite:///{self.database}"
         else:
             raise ValueError(f"Unsupported database type: {self.type}")
