@@ -1,3 +1,4 @@
+from app.domain.response_model import ResponseModel
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -46,9 +47,10 @@ def update_database_config(
     db: Session = Depends(get_db)
 ):
     db_config = database_config.update_db_config(db, config_id, config)
+
     if db_config is None:
         raise HTTPException(status_code=404, detail="数据库配置不存在")
-    return db_config
+    return ResponseModel().success_response(data=db_config).model_dump()
 
 @router.delete("/{config_id}")
 def delete_database_config(
@@ -56,11 +58,12 @@ def delete_database_config(
     db: Session = Depends(get_db)
 ):
     success = database_config.delete_db_config(db, config_id)
+    response = ResponseModel().success_response(data=None)
     if not success:
         raise HTTPException(status_code=404, detail="数据库配置不存在")
-    return {"detail": "删除成功"}
+    return response.model_dump()
 
-@router.post("/test-connection", response_model=bool)
+@router.post("/test-connection", response_model=ResponseModel)
 def test_database_connection_route(
     config: DatabaseConfigCreate
 ):
@@ -69,6 +72,11 @@ def test_database_connection_route(
     """
     try:
         success = test_db_connection(config)
-        return success
+        response = ResponseModel()
+        if not success:
+            response.error_response(code="500", msg="数据库连接失败,请检查配置")
+        else:
+            response.success_response()
+        return response.model_dump()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -5,5 +5,4 @@ node_modules
 dist
 __pycache__
 **/*.pyc
-backend/poetry.lock
-.vscode
+poetry.lock
